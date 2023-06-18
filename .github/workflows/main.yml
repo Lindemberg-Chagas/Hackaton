@@ -1,0 +1,18 @@
+name: HTTP
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  cd-prod:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy Docker
+      run: |
+        ssh azure 'sudo systemctl stop java-api'
+        ssh azure 'sudo rm -rf /api/java-api.jar'
+        scp target/java-api.jar azure:/api/java-api.jar
+        ssh azure 'sudo systemctl start java-api'
